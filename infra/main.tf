@@ -8,11 +8,15 @@ resource "azurerm_resource_group" "rg" {
 ##create random id
 resource "random_string" "randomsqlserver1" {
   length  = 8
+  lower = true
+  upper = false
   special = false
 }
 
 resource "random_string" "randomsqlserver2" {
   length  = 8
+  lower = true
+  upper = false
   special = false
 }
 
@@ -24,6 +28,7 @@ resource "azurerm_mssql_server" "sqlserversource" {
   version                      = "12.0"
   administrator_login          = var.sqlusername
   administrator_login_password = var.sqlpassword
+  public_network_access_enabled = true
 }
 
 ##create sql database source
@@ -60,6 +65,7 @@ resource "azurerm_synapse_workspace" "targetworkspace" {
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.sqldwadls.id
   sql_administrator_login              = var.sqldwusername
   sql_administrator_login_password     = var.sqldwpassword
+  public_network_access_enabled = true
 
   identity {
     type = "SystemAssigned"
@@ -120,13 +126,13 @@ resource "azurerm_key_vault_secret" "sqlpasswordsource" {
 
 ##store sql dw username/pwd in keyvault
 resource "azurerm_key_vault_secret" "sqldwusernametarget" {
-  name         = "secret-sql-username-source"
+  name         = "secret-sqldw-username-target"
   value        = var.sqldwusername
   key_vault_id = azurerm_key_vault.unittest.id
 }
 
 resource "azurerm_key_vault_secret" "sqldwpasswordtarget" {
-  name         = "secret-sql-password-source"
+  name         = "secret-sqldw-password-target"
   value        = var.sqldwpassword
   key_vault_id = azurerm_key_vault.unittest.id
 }
