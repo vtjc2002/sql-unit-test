@@ -18,8 +18,8 @@ namespace SqlUnitTestDemo.End2EndTests
             var sqlConnection = new SqlConnection(await _fixture.GetSqlSourceConnectionString());
             var sqldwConnection = new SqlConnection(await _fixture.GetSqlDwTargetConnectionString());
 
-            var sqlquery = "";
-            var sqldwquery = "";
+            var sqlquery = "SELECT [year],[quarter],sum([count]) as [RowCount] FROM [dbo].[YearQuarterCount] group by [year],[quarter]";
+            var sqldwquery = "SELECT [year],[quarter],sum([count]) as [RowCount] FROM [dbo].[ProcessedYearQuarterCount] Group by [year],[quarter]";
 
             //Act
             var sourcedata = await sqlConnection.QueryAsync<YearQuarterCount>(sqlquery);

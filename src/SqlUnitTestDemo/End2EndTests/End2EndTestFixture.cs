@@ -4,14 +4,14 @@ using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 
 
-
 namespace SqlUnitTestDemo.End2EndTests
 {
-    public class End2EndTestFixture: IDisposable
+    public class End2EndTestFixture : IDisposable
     {
 
         private readonly IConfiguration _configuration;
         private readonly SecretClient _secretClient;
+        private string _sqlusername, _sqlpassword, _sqldwusername, _sqldwpassword;
 
         public End2EndTestFixture()
         {
@@ -31,7 +31,7 @@ namespace SqlUnitTestDemo.End2EndTests
         /// </summary>
         public void Dispose()
         {
-            
+
         }
 
 
@@ -39,12 +39,22 @@ namespace SqlUnitTestDemo.End2EndTests
         public async Task<string> GetSqlSourceConnectionString()
         {
             var sqlconnectionstring = _configuration.GetConnectionString("SqlSource");
-            var sqlusername = await _secretClient.GetSecretAsync("secret-sql-username-source");
-            var sqlpassword = await _secretClient.GetSecretAsync("secret-sql-password-source");
+
+            if (string.IsNullOrEmpty(_sqlusername))
+            {
+                var sqlusername = await _secretClient.GetSecretAsync("secret-sql-username-source");
+                _sqlusername = sqlusername.Value.Value;
+            }
+
+            if (string.IsNullOrEmpty(_sqlpassword))
+            {
+                var sqlpassword = await _secretClient.GetSecretAsync("secret-sql-password-source");
+                _sqlpassword = sqlpassword.Value.Value;
+            }
 
 
-            sqlconnectionstring.Replace("##username##", sqlusername.Value.Value);
-            sqlconnectionstring.Replace("##password##", sqlpassword.Value.Value);
+            sqlconnectionstring = sqlconnectionstring.Replace("##username##", _sqlusername);
+            sqlconnectionstring = sqlconnectionstring.Replace("##password##", _sqlpassword);
 
             return sqlconnectionstring;
         }
@@ -52,15 +62,26 @@ namespace SqlUnitTestDemo.End2EndTests
         // Gets the sql dw target connection string from the configuration
         public async Task<string> GetSqlDwTargetConnectionString()
         {
-            var sqldwconnectionstring= _configuration.GetConnectionString("SqlSource");
-            var sqlusername = await _secretClient.GetSecretAsync("secret-sqldw-username-target");
-            var sqlpassword = await _secretClient.GetSecretAsync("secret-sqldw-password-target");
+            var sqldwconnectionstring = _configuration.GetConnectionString("SqlDwTarget");
 
+            if (string.IsNullOrEmpty(_sqldwusername))
+            {
+                var sqldwusername = await _secretClient.GetSecretAsync("secret-sqldw-username-target");
+                _sqldwusername = sqldwusername.Value.Value;
+            }
 
-            sqldwconnectionstring.Replace("##username##", sqlusername.Value.Value);
-            sqldwconnectionstring.Replace("##password##", sqlpassword.Value.Value);
+            if (string.IsNullOrEmpty(_sqldwpassword))
+            {
+                var sqldwpassword = await _secretClient.GetSecretAsync("secret-sqldw-password-target");
+                _sqldwpassword = sqldwpassword.Value.Value;
+            }
+
+            sqldwconnectionstring = sqldwconnectionstring.Replace("##username##", _sqldwusername);
+            sqldwconnectionstring = sqldwconnectionstring.Replace("##password##", _sqldwpassword);
 
             return sqldwconnectionstring;
         }
+
+
     }
 }

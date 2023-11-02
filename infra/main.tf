@@ -6,28 +6,28 @@ resource "azurerm_resource_group" "rg" {
 }
 
 ##create random id
-resource "random_string" "randomsqlserver1" {
+resource "random_string" "source" {
   length  = 8
-  lower = true
-  upper = false
+  lower   = true
+  upper   = false
   special = false
 }
 
-resource "random_string" "randomsqlserver2" {
+resource "random_string" "target" {
   length  = 8
-  lower = true
-  upper = false
+  lower   = true
+  upper   = false
   special = false
 }
 
 ##create sql server source
 resource "azurerm_mssql_server" "sqlserversource" {
-  name                         = "sqlserver${random_string.randomsqlserver1.result}"
-  location                     = azurerm_resource_group.rg.location
-  resource_group_name          = azurerm_resource_group.rg.name
-  version                      = "12.0"
-  administrator_login          = var.sqlusername
-  administrator_login_password = var.sqlpassword
+  name                          = "sqlserver${random_string.source.id}"
+  location                      = azurerm_resource_group.rg.location
+  resource_group_name           = azurerm_resource_group.rg.name
+  version                       = "12.0"
+  administrator_login           = var.sqlusername
+  administrator_login_password  = var.sqlpassword
   public_network_access_enabled = true
 }
 
@@ -37,7 +37,7 @@ resource "azurerm_mssql_database" "sqldbsource" {
   server_id      = azurerm_mssql_server.sqlserversource.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
-  max_size_gb    = 4
+  max_size_gb    = 10
   read_scale     = false
   sku_name       = "S0"
   zone_redundant = false
@@ -45,7 +45,7 @@ resource "azurerm_mssql_database" "sqldbsource" {
 
 ##create synapse sql pool target
 resource "azurerm_storage_account" "sqldwsatarget" {
-  name                     = "sa${random_string.randomsqlserver2.result}"
+  name                     = "sa${random_string.target.id}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -59,13 +59,13 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "sqldwadls" {
 }
 
 resource "azurerm_synapse_workspace" "targetworkspace" {
-  name                                 = "sy${random_string.randomsqlserver2.result}}"
+  name                                 = "sw${random_string.target.id}"
   resource_group_name                  = azurerm_resource_group.rg.name
   location                             = azurerm_resource_group.rg.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.sqldwadls.id
   sql_administrator_login              = var.sqldwusername
   sql_administrator_login_password     = var.sqldwpassword
-  public_network_access_enabled = true
+  public_network_access_enabled        = true
 
   identity {
     type = "SystemAssigned"
@@ -73,11 +73,11 @@ resource "azurerm_synapse_workspace" "targetworkspace" {
 }
 
 resource "azurerm_synapse_sql_pool" "sqlpooltarget" {
-  name                 = "sqlpooltarget"
-  synapse_workspace_id = azurerm_synapse_workspace.targetworkspace.id
-  sku_name             = "DW100c"
-  create_mode          = "Default"
-  storage_account_type = "LRS"
+  name                      = "sqlpooltarget"
+  synapse_workspace_id      = azurerm_synapse_workspace.targetworkspace.id
+  sku_name                  = "DW100c"
+  create_mode               = "Default"
+  storage_account_type      = "LRS"
   geo_backup_policy_enabled = false
 }
 
@@ -85,7 +85,7 @@ resource "azurerm_synapse_sql_pool" "sqlpooltarget" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "unittest" {
-  name                       = "unittestkeyvault${random_string.randomsqlserver1.result}"
+  name                       = "unittestkeyvault${random_string.source.result}"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
