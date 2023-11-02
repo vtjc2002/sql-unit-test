@@ -23,7 +23,7 @@ steps:
 
 - task: FileTransform@1
   inputs:
-    folderPath: '$(System.DefaultWorkingDirectory)/**/scr/SqlUnitTestDemo'
+    folderPath: '$(System.DefaultWorkingDirectory)/scr/SqlUnitTestDemo'
     fileType: 'json'
     targetFiles: '**/scr/SqlUnitTestDemo/appsettings.json'
 
