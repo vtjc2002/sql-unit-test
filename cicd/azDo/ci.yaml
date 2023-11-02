@@ -26,7 +26,7 @@ steps:
       $json.AzureResources.ServicePrincipleClientSecret = $(AzureResources.ServicePrincipleClientSecret)
       $json | ConvertTo-Json | Out-File "appsettings.json"
       Write-Host $(AzureResources.TenantId)
-    workingDirectory: '$(System.DefaultWorkingDirectory)/scr/SqlUnitTestDemo/'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/scr/SqlUnitTestDemo'
 
 # - task: NuGetToolInstaller@1
 
