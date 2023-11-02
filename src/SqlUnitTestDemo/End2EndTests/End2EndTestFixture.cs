@@ -22,8 +22,11 @@ namespace SqlUnitTestDemo.End2EndTests
                 .Build();
 
             // Get Azure Key Vault client
-            var kvUri = "https://" + _configuration.GetSection("AzureResources").GetValue<string>("AzureKeyVaultName") + ".vault.azure.net";
-            _secretClient = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+            var kvUri = "https://" + _configuration.GetSection("AzureResources").GetValue<string>("KeyVaultName") + ".vault.azure.net";
+            _secretClient = new SecretClient(new Uri(kvUri), 
+                new ClientSecretCredential(tenantId: _configuration.GetSection("AzureResources").GetValue<string>("TenantId"), 
+                    clientId: _configuration.GetSection("AzureResources").GetValue<string>("ServicePrincipleClientId"), 
+                    clientSecret: _configuration.GetSection("AzureResources").GetValue<string>("ServicePrincipleClientSecret")));
         }
 
         /// <summary>
