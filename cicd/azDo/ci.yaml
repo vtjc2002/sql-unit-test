@@ -24,21 +24,19 @@ steps:
       $json.AzureResources.ServicePrincipleClientId = '$(AzureResources.ServicePrincipleClientId)'
       $json.AzureResources.ServicePrincipleClientSecret = '$(AzureResources.ServicePrincipleClientSecret)'
       $json | ConvertTo-Json | Out-File "$(Build.SourcesDirectory)/src/SqlUnitTestDemo/appsettings.json"
-      Write-Host $json.AzureResources.TenantId
 
+- task: NuGetToolInstaller@1
 
-# - task: NuGetToolInstaller@1
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+  displayName: 'Restore NuGet packages'
 
-# - task: NuGetCommand@2
-#   inputs:
-#     restoreSolution: '**/*.sln'
-#   displayName: 'Restore NuGet packages'
-
-# #run test
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'test'
-#     arguments: '--collect "XPlat Code coverage"'
-#     testRunTitle: 'Run Tests'
-#     projects: '**/src/SqlUnitTestDemo/SqlUnitTestDemo.csproj'
+#run test
+- task: DotNetCoreCLI@2
+  displayName: 'run end to end test'
+  inputs:
+    command: 'test'
+    testRunTitle: 'Run Tests'
+    projects: '**/src/SqlUnitTestDemo/SqlUnitTestDemo.csproj'
 
