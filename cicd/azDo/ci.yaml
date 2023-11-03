@@ -19,13 +19,13 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      Write-Host $(AzureResources.TenantId)
       $json = Get-Content "$(Build.SourcesDirectory)/src/SqlUnitTestDemo/appsettings.json" | ConvertFrom-Json 
-      $json.AzureResources.TenantId = $(AzureResources.TenantId)
-      $json.AzureResources.ServicePrincipleClientId = $(AzureResources.ServicePrincipleClientId)
-      $json.AzureResources.ServicePrincipleClientSecret = $(AzureResources.ServicePrincipleClientSecret)
+      $json.AzureResources.TenantId = '$(AzureResources.TenantId)''
+      $json.AzureResources.ServicePrincipleClientId = '$(AzureResources.ServicePrincipleClientId)''
+      $json.AzureResources.ServicePrincipleClientSecret = '$(AzureResources.ServicePrincipleClientSecret)''
       $json | ConvertTo-Json | Out-File "$(Build.SourcesDirectory)/src/SqlUnitTestDemo/appsettings.json"
-      Write-Host $(AzureResources.TenantId)
+      Write-Host $json.AzureResources.TenantId
+
 
 # - task: NuGetToolInstaller@1
 
