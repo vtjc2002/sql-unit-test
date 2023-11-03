@@ -10,8 +10,7 @@ trigger:
  paths:
    exclude:
      - README.md
-
-
+     - cicd/azDo/ci.yaml
 
 pool:
   vmImage: 'ubuntu-latest'
