@@ -1,7 +1,15 @@
-# sql-unit-test
-Demo on sql-unit-test
+# Intro
+The sample is meant to demonstrate integration test between 2 sql sources utilizing dontnet test and xUnit test framework.  The source db and target db are in Azure in the sample but can be easily modified to work on any sql datastore.
 
-## infra
+## Project Prerequisites
+- [Visual Studio](https://visualstudio.microsoft.com/): (Optional) You can use Visual Studio for developing and managing your .NET 6 test project.
+- [Visual Studio Code](https://code.visualstudio.com/): (Optional) Visual Studio Code is a lightweight and highly customizable code editor suitable for .NET development.
+- [Terraform](https://www.terraform.io/downloads.html): Terraform is used for managing infrastructure as code. Ensure that Terraform is installed if you plan to use infrastructure automation.
+- [Azure cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) The Azure Command-Line Interface (CLI) is a cross-platform command-line tool to connect to Azure and execute administrative commands on Azure resources.
+
+## Azure Infrastructure
+You can skip this portion if you have your Azure infrastructure setup already.  
+
 use infra/terraform to create infra.
 The sql db and synapse dw username and passwords will be saved to keyvault
 
