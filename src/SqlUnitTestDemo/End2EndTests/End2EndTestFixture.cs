@@ -23,6 +23,9 @@ namespace SqlUnitTestDemo.End2EndTests
 
             // Get Azure Key Vault client
             var kvUri = "https://" + _configuration.GetSection("AzureResources").GetValue<string>("KeyVaultName") + ".vault.azure.net";
+            
+            // Using Service Principle here because Managed Identity is only supported in Azure DevOps if it's the same tenant.
+            // this sample is not using the same azDo tenant as the Azure Resources.
             _secretClient = new SecretClient(new Uri(kvUri), 
                 new ClientSecretCredential(tenantId: _configuration.GetSection("AzureResources").GetValue<string>("TenantId"), 
                     clientId: _configuration.GetSection("AzureResources").GetValue<string>("ServicePrincipleClientId"), 
@@ -66,6 +69,29 @@ namespace SqlUnitTestDemo.End2EndTests
         public async Task<string> GetSqlDwTargetConnectionString()
         {
             var sqldwconnectionstring = _configuration.GetConnectionString("SqlDwTarget");
+
+            if (string.IsNullOrEmpty(_sqldwusername))
+            {
+                var sqldwusername = await _secretClient.GetSecretAsync("secret-sqldw-username-target");
+                _sqldwusername = sqldwusername.Value.Value;
+            }
+
+            if (string.IsNullOrEmpty(_sqldwpassword))
+            {
+                var sqldwpassword = await _secretClient.GetSecretAsync("secret-sqldw-password-target");
+                _sqldwpassword = sqldwpassword.Value.Value;
+            }
+
+            sqldwconnectionstring = sqldwconnectionstring.Replace("##username##", _sqldwusername);
+            sqldwconnectionstring = sqldwconnectionstring.Replace("##password##", _sqldwpassword);
+
+            return sqldwconnectionstring;
+        }
+
+        // Gets the Synapse Sql Serverless target connection string from the configuration
+        public async Task<string> GetSynapseSqlServerLessTargetConnectionString()
+        {
+            var sqldwconnectionstring = _configuration.GetConnectionString("SynapseServerlessTarget");
 
             if (string.IsNullOrEmpty(_sqldwusername))
             {

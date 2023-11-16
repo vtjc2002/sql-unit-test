@@ -36,6 +36,24 @@ namespace SqlUnitTestDemo.End2EndTests
             }
         }
 
+        [Fact(DisplayName = "The distinct count of years should match from the delta file")]
+        public async Task DistinctCountOfYearOfDeltaFormatShouldMatch()
+        {
+            //Setup
+            var synapseServerlessConnection = new SqlConnection(await _fixture.GetSynapseSqlServerLessTargetConnectionString());
+
+            //This dataset is publicly available in Azure learn https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format
+            var sqlquery = "SELECT distinct([year]) FROM OPENROWSET( BULK 'https://sqlondemandstorage.blob.core.windows.net/delta-lake/covid/', FORMAT = 'delta') as rows ORDER By [year];";
+
+            //Act
+            var targetdata = await synapseServerlessConnection.QueryAsync<Year>(sqlquery);
+            var sortedTargetdata = targetdata.OrderBy(x => x.year);
+
+            //Assert
+            Assert.True(sortedTargetdata.First().year == 2019, $"The first year should be 2019 but it's {sortedTargetdata.First().year}.");
+            Assert.True(sortedTargetdata.Last().year == 2020, $"The last year should be 2020 but it's {sortedTargetdata.Last().year}.");
+        }
+
     }
 
 }
