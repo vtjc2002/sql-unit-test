@@ -15,7 +15,7 @@ namespace SqlUnitTestDemo.End2EndTests
         public RowCountByYearQuarterTests(End2EndTestFixture fixture) => _fixture = fixture;
 
         /// <summary>
-        /// Example of querying sql db as source and sql dw as target and comparing the results
+        /// Example of querying sql db as source and sql dw as target and comparing the results.
         /// </summary>
         /// <returns></returns>
         [Fact(DisplayName ="End to EndTest Sql year and quarter count equals Sql Dw data")]
