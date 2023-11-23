@@ -1,0 +1,29 @@
+[
+  {
+    "testName": "row count matches between sql and parquet files",
+    "active": "true",
+    "source": "sql",
+    "sourceQuery": "select count(*) from dbo.factInternetSales",
+    "target": "azureSynapseServerless",
+    "targetQuery": "select count(*) from dbo.factInternetSales",
+    "assert": "equal"
+  },
+  {
+    "testName": "this is test 2",
+    "active": "false",
+    "source": "sql",
+    "sourceQuery": "select count(*) from dbo.factInternetSales",
+    "target": "azureSynapseDedicatedPool",
+    "targetQuery": "select count(*) from dbo.factInternetSales",
+    "assert": "equal"
+  },
+  {
+    "testName": "test 3",
+    "active": "true",
+    "source": "sql",
+    "sourceQuery": "select count(*) from dbo.factInternetSales",
+    "target": "azureSynapseServerless",
+    "targetQuery": "select count(*) from dbo.factInternetSales",
+    "assert": "equal"
+  }
+]

@@ -11,7 +11,7 @@ namespace SqlUnitTestDemo.End2EndTests
 
         private readonly IConfiguration _configuration;
         private readonly SecretClient _secretClient;
-        private string _sqlusername, _sqlpassword, _sqldwusername, _sqldwpassword;
+        private string? _sqlusername, _sqlpassword, _sqldwusername, _sqldwpassword;
 
         public End2EndTestFixture()
         {
@@ -41,10 +41,10 @@ namespace SqlUnitTestDemo.End2EndTests
         }
 
 
-        // Gets the sql source connection string from the configuration
-        public async Task<string> GetSqlSourceConnectionString()
+        // Gets the sql connection string from the configuration
+        public async Task<string> GetSqlConnectionString()
         {
-            var sqlconnectionstring = _configuration.GetConnectionString("SqlSource");
+            var sqlconnectionstring = _configuration.GetConnectionString("Sql");
 
             if (string.IsNullOrEmpty(_sqlusername))
             {
@@ -65,10 +65,10 @@ namespace SqlUnitTestDemo.End2EndTests
             return sqlconnectionstring;
         }
 
-        // Gets the sql dw target connection string from the configuration
-        public async Task<string> GetSqlDwTargetConnectionString()
+        // Gets the synapse dedicated pool connection string from the configuration
+        public async Task<string> GetSqlDedicatedPoolConnectionString()
         {
-            var sqldwconnectionstring = _configuration.GetConnectionString("SqlDwTarget");
+            var sqldwconnectionstring = _configuration.GetConnectionString("SynapseDedicatedPool");
 
             if (string.IsNullOrEmpty(_sqldwusername))
             {
@@ -88,10 +88,10 @@ namespace SqlUnitTestDemo.End2EndTests
             return sqldwconnectionstring;
         }
 
-        // Gets the Synapse Sql Serverless target connection string from the configuration
-        public async Task<string> GetSynapseSqlServerLessTargetConnectionString()
+        // Gets the Synapse Sql Serverless connection string from the configuration
+        public async Task<string> GetSynapseSqlServerLessConnectionString()
         {
-            var sqldwconnectionstring = _configuration.GetConnectionString("SynapseServerlessTarget");
+            var sqldwconnectionstring = _configuration.GetConnectionString("SynapseSqlServerless");
 
             if (string.IsNullOrEmpty(_sqldwusername))
             {
