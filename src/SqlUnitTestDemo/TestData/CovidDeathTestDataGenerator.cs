@@ -1,25 +1,26 @@
 ﻿using Newtonsoft.Json;
+using SqlUnitTestDemo.Models;
 using System.Collections;
 
 namespace SqlUnitTestDemo.TestData
 {
-    public class TestDataGenerator: IEnumerable<object[]>
+    public class CovidDeathTestDataGenerator: IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            List<Models.TestData> items;
+            List<TestMetaData> items;
 
             //read data from testData.json file and deserialize into a list of TestData objects
-            using (StreamReader r = new StreamReader(@"TestData/testData.json"))
+            using (StreamReader r = new StreamReader(@"TestData/CovidDeathTestSet.json"))
             {
                 string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<List<Models.TestData>>(json);
+                items = JsonConvert.DeserializeObject<List<TestMetaData>>(json);
             }
 
             //return the list of active TestData objects
             foreach (var item in items.Where(w => w.Active))
             {
-                yield return new object[] { item.TestName, item.Source, item.SourceQuery, item.Target, item.TargetQuery, item.Assert };
+                yield return new object[] { item.TestName, item.Source, item.SourceQuery, item.Target, item.TargetQuery, item.Assertion };
             }
             
         }

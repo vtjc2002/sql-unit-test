@@ -1,4 +1,7 @@
 ﻿using SqlUnitTestDemo.Enums;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using SqlUnitTestDemo.Models;
 
 namespace SqlUnitTestDemo.End2EndTests
 {
@@ -9,7 +12,7 @@ namespace SqlUnitTestDemo.End2EndTests
         public ParameterizedTestSamples(End2EndTestFixture fixture) => _fixture = fixture;
 
         /// <summary>
-        /// Example of a parameterized test using the TestDataGenerator class
+        /// Example of a parameterized test using the CovidDeathTestDataGenerator class
         /// </summary>
         /// <param name="testName"></param>
         /// <param name="source"></param>
@@ -18,21 +21,24 @@ namespace SqlUnitTestDemo.End2EndTests
         /// <param name="targetQuery"></param>
         /// <param name="Assertion"></param>
         [Theory]
-        [ClassData(typeof(TestData.TestDataGenerator))]
+        [ClassData(typeof(TestData.CovidDeathTestDataGenerator))]
         public async Task ReadFromTestDataSample(string testName, DataSource source, string sourceQuery, DataSource target, string targetQuery, string Assertion)
         {
             //Setup
-            string sourceConnectionString = await GetSourceConnectionString(source);
-            string targetConnectionString = await GetSourceConnectionString(target);
+            var sourceConnection = new SqlConnection(await GetSourceConnectionString(source));
+            var targetConnection = new SqlConnection(await GetSourceConnectionString(target));
 
             //Act
 
-            
+            var sourceData = await sourceConnection.QueryAsync<CovidDeath> (sourceQuery);
+            var targetData = await targetConnection.QueryAsync<CovidDeath>(targetQuery);
 
             //Assert
-            Assert.True(!string.IsNullOrEmpty(testName),"Test name should not be empty.");
+            Assert.True(sourceData.Count() == targetData.Count(), "The count show match");
 
         }
+
+        #region Helper methods
 
         /// <summary>
         /// private method to get the connection string for the data source type
@@ -60,6 +66,7 @@ namespace SqlUnitTestDemo.End2EndTests
 
             return connectionString;
         }
+        #endregion
 
     }
 }

@@ -6,7 +6,7 @@
     "sourceQuery": "select count(*) from dbo.factInternetSales",
     "target": "azureSynapseServerless",
     "targetQuery": "select count(*) from dbo.factInternetSales",
-    "assert": "equal"
+    "assertion": "equal"
   },
   {
     "testName": "this is test 2",
@@ -15,7 +15,7 @@
     "sourceQuery": "select count(*) from dbo.factInternetSales",
     "target": "azureSynapseDedicatedPool",
     "targetQuery": "select count(*) from dbo.factInternetSales",
-    "assert": "equal"
+    "assertion": "equal"
   },
   {
     "testName": "test 3",
@@ -24,6 +24,6 @@
     "sourceQuery": "select count(*) from dbo.factInternetSales",
     "target": "azureSynapseServerless",
     "targetQuery": "select count(*) from dbo.factInternetSales",
-    "assert": "equal"
+    "assertion": "equal"
   }
 ]
