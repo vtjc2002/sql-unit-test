@@ -34,7 +34,17 @@ namespace SqlUnitTestDemo.End2EndTests
             var targetData = await targetConnection.QueryAsync<CovidDeath>(targetQuery);
 
             //Assert
-            Assert.True(sourceData.Count() == targetData.Count(), "The count show match");
+
+            //the count should be the same
+            Assert.True(sourceData.Count() == targetData.Count(), $"The count of years should be the same but target distinct count is {targetData.Count()}.");
+
+      
+            //the years should be the same
+            sourceData.ToList().ForEach(source =>
+            {
+                var compare = targetData.Where(x => x.Year == source.Year).First();
+                Assert.True(source.Year == compare.Year, $"The source year {source.Year} should be the same but target year is {compare.Year}.");
+            });
 
         }
 
