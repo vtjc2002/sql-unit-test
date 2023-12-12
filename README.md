@@ -8,7 +8,7 @@ The sample is meant to demonstrate integration test between 2 sql sources utiliz
 - [Azure cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) The Azure Command-Line Interface (CLI) is a cross-platform command-line tool to connect to Azure and execute administrative commands on Azure resources.
 
 ## High Level Design
-![Design diagram](assests/design-diagram.png)
+![Design diagram](assests/design-diagram1.png)
 
 ## Azure Infrastructure
 
