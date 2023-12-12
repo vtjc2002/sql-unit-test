@@ -29,7 +29,7 @@ steps:
       $json.AzureResources.TenantId = '$(AzureResources.TenantId)'
       $json.AzureResources.ServicePrincipleClientId = '$(AzureResources.ServicePrincipleClientId)'
       $json.AzureResources.ServicePrincipleClientSecret = '$(AzureResources.ServicePrincipleClientSecret)'
-      Write-Output $json.ToString() 
+      $json | Out-String -Width 250
       $json | ConvertTo-Json | Out-File "$(Build.SourcesDirectory)/src/SqlUnitTestDemo/appsettings.json"
 
 - task: NuGetToolInstaller@1
