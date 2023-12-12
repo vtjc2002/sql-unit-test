@@ -1,29 +1,25 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer.Server;
 using SqlUnitTestDemo.Models;
-using System;
-using System.Formats.Asn1;
-using System.Text.RegularExpressions;
 
 namespace SqlUnitTestDemo.End2EndTests
 {
-    public class RowCountByYearQuarterTests: IClassFixture<End2EndTestFixture>
+    public class FixedTestSamples: IClassFixture<End2EndTestFixture>
     {
         private readonly End2EndTestFixture _fixture;
 
-        public RowCountByYearQuarterTests(End2EndTestFixture fixture) => _fixture = fixture;
+        public FixedTestSamples(End2EndTestFixture fixture) => _fixture = fixture;
 
         /// <summary>
-        /// Example of querying sql db as source and sql dw as target and comparing the results.
+        /// Example of querying sql db as source and sql dedicated pool as target and comparing the results.  Default is skipped since it requries dedcated pool to be running.
         /// </summary>
         /// <returns></returns>
-        [Fact(DisplayName ="End to EndTest Sql year and quarter count equals Sql Dw data")]
+        [Fact(DisplayName ="End to EndTest Sql year and quarter count equals Sql Dw data", Skip = "Requires dw dedicated pool running.")]
         public async Task RowCountByYearShouldMatch()
         {
             //Setup
-            var sqlConnection = new SqlConnection(await _fixture.GetSqlSourceConnectionString());
-            var sqldwConnection = new SqlConnection(await _fixture.GetSqlDwTargetConnectionString());
+            var sqlConnection = new SqlConnection(await _fixture.GetSqlConnectionString());
+            var sqldwConnection = new SqlConnection(await _fixture.GetSqlDedicatedPoolConnectionString());
 
             var sqlquery = "SELECT [year],[quarter],sum([count]) as [RowCount] FROM [dbo].[YearQuarterCount] group by [year],[quarter]";
             var sqldwquery = "SELECT [year],[quarter],sum([count]) as [RowCount] FROM [dbo].[ProcessedYearQuarterCount] Group by [year],[quarter]";
@@ -53,7 +49,7 @@ namespace SqlUnitTestDemo.End2EndTests
         public async Task DeltaFormatDistinctCountOfYearOfShouldMatch()
         {
             //Setup
-            var synapseServerlessConnection = new SqlConnection(await _fixture.GetSynapseSqlServerLessTargetConnectionString());
+            var synapseServerlessConnection = new SqlConnection(await _fixture.GetSynapseSqlServerLessConnectionString());
             var sourceData = new List<Year> { new Year { year = 2019 }, new Year { year = 2020 } };
 
             //This dataset is publicly available in Azure learn https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/query-delta-lake-format
@@ -85,7 +81,7 @@ namespace SqlUnitTestDemo.End2EndTests
         public async Task ParquetFormatDeathSumShouldMatch()
         {
             // Setup
-            var synapseServerlessConnection = new SqlConnection(await _fixture.GetSynapseSqlServerLessTargetConnectionString());
+            var synapseServerlessConnection = new SqlConnection(await _fixture.GetSynapseSqlServerLessConnectionString());
 
             // Intentionally using month = 0 to indicate sum.
             var sourceData = new List<CovidDeath>() { new CovidDeath { Year = 2019, Month = 0, Deaths = 0 }, new CovidDeath { Year = 2020, Month = 0, Deaths = 1612833 } };

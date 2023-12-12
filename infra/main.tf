@@ -112,27 +112,27 @@ resource "azurerm_key_vault" "unittest" {
 }
 
 ##store sql username/pwd in keyvault
-resource "azurerm_key_vault_secret" "sqlusernamesource" {
-  name         = "secret-sql-username-source"
+resource "azurerm_key_vault_secret" "sqlusername" {
+  name         = "secret-sql-username"
   value        = var.sqlusername
   key_vault_id = azurerm_key_vault.unittest.id
 }
 
-resource "azurerm_key_vault_secret" "sqlpasswordsource" {
-  name         = "secret-sql-password-source"
+resource "azurerm_key_vault_secret" "sqlpassword" {
+  name         = "secret-sql-password"
   value        = var.sqlpassword
   key_vault_id = azurerm_key_vault.unittest.id
 }
 
 ##store sql dw username/pwd in keyvault
-resource "azurerm_key_vault_secret" "sqldwusernametarget" {
-  name         = "secret-sqldw-username-target"
+resource "azurerm_key_vault_secret" "azuresynapseusername" {
+  name         = "secret-azuresynapse-username"
   value        = var.sqldwusername
   key_vault_id = azurerm_key_vault.unittest.id
 }
 
-resource "azurerm_key_vault_secret" "sqldwpasswordtarget" {
-  name         = "secret-sqldw-password-target"
+resource "azurerm_key_vault_secret" "azuresynapsepassword" {
+  name         = "secret-azuresynapse-password"
   value        = var.sqldwpassword
   key_vault_id = azurerm_key_vault.unittest.id
 }

@@ -1,0 +1,29 @@
+[
+  {
+    "testName": "Distinct years count should be the same.  sql vs delta",
+    "active": "true",
+    "source": "sql",
+    "sourceQuery": "select [year], deaths from dbo.CovidDeath",
+    "target": "azureSynapseServerless",
+    "targetQuery": "SELECT [year], sum(deaths) as deaths FROM OPENROWSET( BULK 'https://sqlondemandstorage.blob.core.windows.net/delta-lake/covid/', FORMAT = 'delta') WITH ([year] smallint,deaths int) AS rows GROUP BY [year];",
+    "assertion": "equal"
+  },
+  {
+    "testName": "this is test 2",
+    "active": "false",
+    "source": "sql",
+    "sourceQuery": "select count(*) from dbo.factInternetSales",
+    "target": "azureSynapseDedicatedPool",
+    "targetQuery": "select count(*) from dbo.factInternetSales",
+    "assertion": "equal"
+  },
+  {
+    "testName": "Distinct years count should be the same. sql vs parquet",
+    "active": "true",
+    "source": "sql",
+    "sourceQuery": "select [year], deaths from dbo.CovidDeath",
+    "target": "azureSynapseServerless",
+    "targetQuery": "SELECT [year], sum(deaths) as deaths FROM openrowset( BULK 'https://pandemicdatalake.blob.core.windows.net/public/curated/covid-19/ecdc_cases/latest/ecdc_cases.parquet', FORMAT = 'parquet') WITH([year] smallint,deaths int) AS rows GROUP BY [year];",
+    "assertion": "equal"
+  }
+]
