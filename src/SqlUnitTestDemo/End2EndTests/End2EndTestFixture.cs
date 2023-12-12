@@ -48,13 +48,13 @@ namespace SqlUnitTestDemo.End2EndTests
 
             if (string.IsNullOrEmpty(_sqlusername))
             {
-                var sqlusername = await _secretClient.GetSecretAsync("secret-sql-username-source");
+                var sqlusername = await _secretClient.GetSecretAsync("secret-sql-username");
                 _sqlusername = sqlusername.Value.Value;
             }
 
             if (string.IsNullOrEmpty(_sqlpassword))
             {
-                var sqlpassword = await _secretClient.GetSecretAsync("secret-sql-password-source");
+                var sqlpassword = await _secretClient.GetSecretAsync("secret-sql-password");
                 _sqlpassword = sqlpassword.Value.Value;
             }
 
@@ -72,13 +72,13 @@ namespace SqlUnitTestDemo.End2EndTests
 
             if (string.IsNullOrEmpty(_sqldwusername))
             {
-                var sqldwusername = await _secretClient.GetSecretAsync("secret-sqldw-username-target");
+                var sqldwusername = await _secretClient.GetSecretAsync("secret-azuresynapse-username");
                 _sqldwusername = sqldwusername.Value.Value;
             }
 
             if (string.IsNullOrEmpty(_sqldwpassword))
             {
-                var sqldwpassword = await _secretClient.GetSecretAsync("secret-sqldw-password-target");
+                var sqldwpassword = await _secretClient.GetSecretAsync("secret-azuresynapse-password");
                 _sqldwpassword = sqldwpassword.Value.Value;
             }
 
@@ -95,13 +95,13 @@ namespace SqlUnitTestDemo.End2EndTests
 
             if (string.IsNullOrEmpty(_sqldwusername))
             {
-                var sqldwusername = await _secretClient.GetSecretAsync("secret-sqldw-username-target");
+                var sqldwusername = await _secretClient.GetSecretAsync("secret-azuresynapse-username");
                 _sqldwusername = sqldwusername.Value.Value;
             }
 
             if (string.IsNullOrEmpty(_sqldwpassword))
             {
-                var sqldwpassword = await _secretClient.GetSecretAsync("secret-sqldw-password-target");
+                var sqldwpassword = await _secretClient.GetSecretAsync("secret-azuresynapse-password");
                 _sqldwpassword = sqldwpassword.Value.Value;
             }
 
